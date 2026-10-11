@@ -50,6 +50,7 @@ import java.io.BufferedReader
 import java.io.File
 import java.io.FileReader
 import javax.inject.Inject
+import javax.inject.Provider
 
 @HiltAndroidApp
 class BreezyWeather : Application(), Configuration.Provider {
@@ -88,8 +89,10 @@ class BreezyWeather : Application(), Configuration.Provider {
     @Inject
     lateinit var workerFactory: HiltWorkerFactory
 
+    // Defer constructing RefreshHelper until after Application.onCreate has initialized instance.
+    // Eager injection here builds the network graph before BreezyWeather.instance exists.
     @Inject
-    lateinit var refreshHelper: RefreshHelper
+    lateinit var refreshHelperProvider: Provider<RefreshHelper>
 
     private val appearanceScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private var appearanceRefreshJob: Job? = null
@@ -146,7 +149,7 @@ class BreezyWeather : Application(), Configuration.Provider {
             delay(200)
             try {
                 // Only read cached weather: changing theme must never start a network refresh.
-                refreshHelper.updateWidgetIfNecessary(this@BreezyWeather)
+                refreshHelperProvider.get().updateWidgetIfNecessary(this@BreezyWeather)
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
