@@ -302,22 +302,22 @@ object ClockDayVerticalWidgetIMP : AbstractRemoteViewsPresenter() {
 
         if (color.textColor != Color.TRANSPARENT) {
             views.apply {
-                setTextColor(R.id.widget_clock_day_clock_light, color.textColor)
-                setTextColor(R.id.widget_clock_day_clock_normal, color.textColor)
-                setTextColor(R.id.widget_clock_day_clock_black, color.textColor)
-                setTextColor(R.id.widget_clock_day_clock_aa_light, color.textColor)
-                setTextColor(R.id.widget_clock_day_clock_aa_normal, color.textColor)
-                setTextColor(R.id.widget_clock_day_clock_aa_black, color.textColor)
-                setTextColor(R.id.widget_clock_day_clock_1_light, color.textColor)
-                setTextColor(R.id.widget_clock_day_clock_1_normal, color.textColor)
-                setTextColor(R.id.widget_clock_day_clock_1_black, color.textColor)
-                setTextColor(R.id.widget_clock_day_clock_2_light, color.textColor)
-                setTextColor(R.id.widget_clock_day_clock_2_normal, color.textColor)
-                setTextColor(R.id.widget_clock_day_clock_2_black, color.textColor)
-                setTextColor(R.id.widget_clock_day_date, color.textColor)
-                setTextColor(R.id.widget_clock_day_title, color.textColor)
-                setTextColor(R.id.widget_clock_day_subtitle, color.textColor)
-                setTextColor(R.id.widget_clock_day_time, color.textColor)
+                color.applyTextColor(views, R.id.widget_clock_day_clock_light)
+                color.applyTextColor(views, R.id.widget_clock_day_clock_normal)
+                color.applyTextColor(views, R.id.widget_clock_day_clock_black)
+                color.applyTextColor(views, R.id.widget_clock_day_clock_aa_light)
+                color.applyTextColor(views, R.id.widget_clock_day_clock_aa_normal)
+                color.applyTextColor(views, R.id.widget_clock_day_clock_aa_black)
+                color.applyTextColor(views, R.id.widget_clock_day_clock_1_light)
+                color.applyTextColor(views, R.id.widget_clock_day_clock_1_normal)
+                color.applyTextColor(views, R.id.widget_clock_day_clock_1_black)
+                color.applyTextColor(views, R.id.widget_clock_day_clock_2_light)
+                color.applyTextColor(views, R.id.widget_clock_day_clock_2_normal)
+                color.applyTextColor(views, R.id.widget_clock_day_clock_2_black)
+                color.applyTextColor(views, R.id.widget_clock_day_date)
+                color.applyTextColor(views, R.id.widget_clock_day_title)
+                color.applyTextColor(views, R.id.widget_clock_day_subtitle)
+                color.applyTextColor(views, R.id.widget_clock_day_time)
             }
         }
         if (textSize != 100) {

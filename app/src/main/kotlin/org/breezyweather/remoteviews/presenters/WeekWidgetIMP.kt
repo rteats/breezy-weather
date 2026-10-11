@@ -159,17 +159,17 @@ object WeekWidgetIMP : AbstractRemoteViewsPresenter() {
 
         if (color.textColor != Color.TRANSPARENT) {
             views.apply {
-                setTextColor(R.id.widget_week_week_1, color.textColor)
-                setTextColor(R.id.widget_week_week_2, color.textColor)
-                setTextColor(R.id.widget_week_week_3, color.textColor)
-                setTextColor(R.id.widget_week_week_4, color.textColor)
-                setTextColor(R.id.widget_week_week_5, color.textColor)
-                setTextColor(R.id.widget_week_temp, color.textColor)
-                setTextColor(R.id.widget_week_temp_1, color.textColor)
-                setTextColor(R.id.widget_week_temp_2, color.textColor)
-                setTextColor(R.id.widget_week_temp_3, color.textColor)
-                setTextColor(R.id.widget_week_temp_4, color.textColor)
-                setTextColor(R.id.widget_week_temp_5, color.textColor)
+                color.applyTextColor(views, R.id.widget_week_week_1)
+                color.applyTextColor(views, R.id.widget_week_week_2)
+                color.applyTextColor(views, R.id.widget_week_week_3)
+                color.applyTextColor(views, R.id.widget_week_week_4)
+                color.applyTextColor(views, R.id.widget_week_week_5)
+                color.applyTextColor(views, R.id.widget_week_temp)
+                color.applyTextColor(views, R.id.widget_week_temp_1)
+                color.applyTextColor(views, R.id.widget_week_temp_2)
+                color.applyTextColor(views, R.id.widget_week_temp_3)
+                color.applyTextColor(views, R.id.widget_week_temp_4)
+                color.applyTextColor(views, R.id.widget_week_temp_5)
             }
         }
 

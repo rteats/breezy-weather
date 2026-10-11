@@ -22,6 +22,9 @@ import android.app.PendingIntent
 import android.app.WallpaperManager
 import android.content.ContentUris
 import android.content.Context
+import android.content.res.Configuration
+import android.os.Build
+import android.widget.RemoteViews
 import android.content.Intent
 import android.graphics.drawable.BitmapDrawable
 import android.provider.AlarmClock
@@ -80,6 +83,7 @@ abstract class AbstractRemoteViewsPresenter {
 
         val showCard: Boolean
         val isLightThemed: Boolean
+        private val useMonetText: Boolean
 
         @ColorInt
         var textColor = 0
@@ -88,15 +92,25 @@ abstract class AbstractRemoteViewsPresenter {
         init {
             backgroundType = WidgetBackgroundType.find(cardStyle)
             showCard = backgroundType != WidgetBackgroundType.NONE
+            useMonetText = backgroundType == WidgetBackgroundType.MONET ||
+                (backgroundType == WidgetBackgroundType.NONE && textColor == "monet")
             isLightThemed = when (backgroundType) {
                 WidgetBackgroundType.LIGHT -> true
                 WidgetBackgroundType.DARK -> false
                 WidgetBackgroundType.AUTO -> ThemeManager.isLightTheme(context, dayTime)
-                WidgetBackgroundType.NONE -> isLightWallpaper(context)
+                WidgetBackgroundType.MONET -> context.resources.configuration.uiMode and
+                    Configuration.UI_MODE_NIGHT_MASK != Configuration.UI_MODE_NIGHT_YES
+                WidgetBackgroundType.NONE -> if (useMonetText) {
+                    context.resources.configuration.uiMode and
+                        Configuration.UI_MODE_NIGHT_MASK != Configuration.UI_MODE_NIGHT_YES
+                } else {
+                    isLightWallpaper(context)
+                }
             }
             textType = when (backgroundType) {
                 WidgetBackgroundType.NONE -> {
-                    if (textColor == "dark" || (textColor == "auto" && isLightWallpaper(context))) {
+                    if (textColor == "dark" || (textColor == "auto" && isLightWallpaper(context)) ||
+                        (textColor == "monet" && !isLightThemed)) {
                         NotificationTextColor.DARK
                     } else {
                         NotificationTextColor.LIGHT
@@ -108,8 +122,20 @@ abstract class AbstractRemoteViewsPresenter {
             }
             this.textColor = ContextCompat.getColor(
                 context,
-                if (textType == NotificationTextColor.DARK) R.color.colorTextDark else R.color.colorTextLight
+                if (useMonetText) R.color.colorWidgetM3TextPrimary
+                else if (textType == NotificationTextColor.DARK) R.color.colorTextDark
+                else R.color.colorTextLight
             )
+        }
+
+        fun applyTextColor(views: RemoteViews, viewId: Int) {
+            // Resolve the color in the launcher process when the RemoteViews is applied.
+            // This lets the system choose the current Monet palette and light/dark variant.
+            if (useMonetText && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                views.setColor(viewId, "setTextColor", R.color.colorWidgetM3TextPrimary)
+            } else {
+                views.setTextColor(viewId, textColor)
+            }
         }
 
         val minimalIconColor: NotificationTextColor
@@ -123,6 +149,7 @@ abstract class AbstractRemoteViewsPresenter {
             LIGHT("light"),
             DARK("dark"),
             AUTO("auto"),
+            MONET("monet"),
             NONE("none"),
             ;
 
@@ -203,7 +230,13 @@ abstract class AbstractRemoteViewsPresenter {
             require(color.backgroundType != WidgetColor.WidgetBackgroundType.NONE) {
                 "Trying to get widget background when background type is NONE"
             }
-            return if (color.isLightThemed) R.drawable.widget_card_light else R.drawable.widget_card_dark
+            return if (color.backgroundType == WidgetColor.WidgetBackgroundType.MONET) {
+                R.drawable.widget_card_monet
+            } else if (color.isLightThemed) {
+                R.drawable.widget_card_light
+            } else {
+                R.drawable.widget_card_dark
+            }
         }
 
         fun isWeekIconDaytime(mode: WidgetWeekIconMode?, daytime: Boolean): Boolean {

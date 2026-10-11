@@ -161,15 +161,15 @@ object ClockDayHorizontalWidgetIMP : AbstractRemoteViewsPresenter() {
         views.setTextViewText(R.id.widget_clock_day_subtitle, builder.toString())
         if (color.textColor != Color.TRANSPARENT) {
             views.apply {
-                setTextColor(R.id.widget_clock_day_clock_light, color.textColor)
-                setTextColor(R.id.widget_clock_day_clock_normal, color.textColor)
-                setTextColor(R.id.widget_clock_day_clock_black, color.textColor)
-                setTextColor(R.id.widget_clock_day_clock_aa_light, color.textColor)
-                setTextColor(R.id.widget_clock_day_clock_aa_normal, color.textColor)
-                setTextColor(R.id.widget_clock_day_clock_aa_black, color.textColor)
-                setTextColor(R.id.widget_clock_day_title, color.textColor)
-                setTextColor(R.id.widget_clock_day_alternate_calendar, color.textColor)
-                setTextColor(R.id.widget_clock_day_subtitle, color.textColor)
+                color.applyTextColor(views, R.id.widget_clock_day_clock_light)
+                color.applyTextColor(views, R.id.widget_clock_day_clock_normal)
+                color.applyTextColor(views, R.id.widget_clock_day_clock_black)
+                color.applyTextColor(views, R.id.widget_clock_day_clock_aa_light)
+                color.applyTextColor(views, R.id.widget_clock_day_clock_aa_normal)
+                color.applyTextColor(views, R.id.widget_clock_day_clock_aa_black)
+                color.applyTextColor(views, R.id.widget_clock_day_title)
+                color.applyTextColor(views, R.id.widget_clock_day_alternate_calendar)
+                color.applyTextColor(views, R.id.widget_clock_day_subtitle)
             }
         }
         if (textSize != 100) {

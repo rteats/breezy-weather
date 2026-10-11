@@ -141,12 +141,12 @@ object MultiCityWidgetIMP : AbstractRemoteViewsPresenter() {
 
         if (color.textColor != Color.TRANSPARENT) {
             views.apply {
-                setTextColor(R.id.widget_multi_city_horizontal_title_1, color.textColor)
-                setTextColor(R.id.widget_multi_city_horizontal_title_2, color.textColor)
-                setTextColor(R.id.widget_multi_city_horizontal_title_3, color.textColor)
-                setTextColor(R.id.widget_multi_city_horizontal_content_1, color.textColor)
-                setTextColor(R.id.widget_multi_city_horizontal_content_2, color.textColor)
-                setTextColor(R.id.widget_multi_city_horizontal_content_3, color.textColor)
+                color.applyTextColor(views, R.id.widget_multi_city_horizontal_title_1)
+                color.applyTextColor(views, R.id.widget_multi_city_horizontal_title_2)
+                color.applyTextColor(views, R.id.widget_multi_city_horizontal_title_3)
+                color.applyTextColor(views, R.id.widget_multi_city_horizontal_content_1)
+                color.applyTextColor(views, R.id.widget_multi_city_horizontal_content_2)
+                color.applyTextColor(views, R.id.widget_multi_city_horizontal_content_3)
             }
         }
         if (textSize != 100) {

@@ -265,11 +265,11 @@ object DayWidgetIMP : AbstractRemoteViewsPresenter() {
         }
         if (color.textColor != Color.TRANSPARENT) {
             views.apply {
-                setTextColor(R.id.widget_day_title, color.textColor)
-                setTextColor(R.id.widget_day_sign, color.textColor)
-                setTextColor(R.id.widget_day_symbol, color.textColor)
-                setTextColor(R.id.widget_day_subtitle, color.textColor)
-                setTextColor(R.id.widget_day_time, color.textColor)
+                color.applyTextColor(views, R.id.widget_day_title)
+                color.applyTextColor(views, R.id.widget_day_sign)
+                color.applyTextColor(views, R.id.widget_day_symbol)
+                color.applyTextColor(views, R.id.widget_day_subtitle)
+                color.applyTextColor(views, R.id.widget_day_time)
             }
         }
         if (textSize != 100) {

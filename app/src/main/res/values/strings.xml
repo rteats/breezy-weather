@@ -884,6 +884,7 @@
     <string name="settings_color_day_night">Day / Night</string>
     <!-- Used as "Follow app preference/setting", NOT as in "Follow us on Facebook". Keep it short or translate it “Automatic” if too complicated -->
     <string name="settings_color_app">Follow app</string>
+    <string name="settings_color_monet">Material You (system colors)</string>
     <string name="settings_color_day_always">Always day</string>
     <string name="settings_color_night_always">Always night</string>
     <string name="settings_color_light">Light</string>

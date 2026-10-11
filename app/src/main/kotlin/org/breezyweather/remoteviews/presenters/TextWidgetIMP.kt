@@ -133,9 +133,9 @@ object TextWidgetIMP : AbstractRemoteViewsPresenter() {
                         unitWidth = UnitWidth.NARROW
                     )
                 )
-                setTextColor(R.id.widget_text_date, color.textColor)
-                setTextColor(R.id.widget_text_weather, color.textColor)
-                setTextColor(R.id.widget_text_temperature, color.textColor)
+                color.applyTextColor(views, R.id.widget_text_date)
+                color.applyTextColor(views, R.id.widget_text_weather)
+                color.applyTextColor(views, R.id.widget_text_temperature)
             }
             setTextViewText(
                 R.id.widget_text_subtitle,
@@ -148,7 +148,7 @@ object TextWidgetIMP : AbstractRemoteViewsPresenter() {
                     pollenIndexSource
                 )
             )
-            setTextColor(R.id.widget_text_subtitle, color.textColor)
+            color.applyTextColor(views, R.id.widget_text_subtitle)
         }
         if (textSize != 100) {
             val contentSize = context.resources.getDimensionPixelSize(R.dimen.widget_content_text_size).toFloat()

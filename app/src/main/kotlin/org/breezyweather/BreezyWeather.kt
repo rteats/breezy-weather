@@ -18,6 +18,10 @@ package org.breezyweather
 
 import android.app.Application
 import android.app.UiModeManager
+import android.app.WallpaperManager
+import android.content.res.Configuration as AndroidConfiguration
+import android.os.Handler
+import android.os.Looper
 import android.content.pm.ApplicationInfo
 import android.os.Build
 import android.os.Process
@@ -26,6 +30,13 @@ import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
 import androidx.work.WorkInfo
 import androidx.work.WorkQuery
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import dagger.hilt.android.HiltAndroidApp
 import org.breezyweather.common.activities.BreezyActivity
 import org.breezyweather.common.extensions.uiModeManager
@@ -34,6 +45,7 @@ import org.breezyweather.common.utils.AndroidSignatureFinder
 import org.breezyweather.common.utils.helpers.LogHelper
 import org.breezyweather.domain.settings.SettingsManager
 import org.breezyweather.remoteviews.Notifications
+import org.breezyweather.sources.RefreshHelper
 import java.io.BufferedReader
 import java.io.File
 import java.io.FileReader
@@ -76,12 +88,33 @@ class BreezyWeather : Application(), Configuration.Provider {
     @Inject
     lateinit var workerFactory: HiltWorkerFactory
 
+    @Inject
+    lateinit var refreshHelper: RefreshHelper
+
+    private val appearanceScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+    private var appearanceRefreshJob: Job? = null
+    private var previousNightMode = AndroidConfiguration.UI_MODE_NIGHT_UNDEFINED
+
     override fun onCreate() {
         super.onCreate()
 
         instance = this
 
         setupNotificationChannels()
+
+        previousNightMode = resources.configuration.uiMode and AndroidConfiguration.UI_MODE_NIGHT_MASK
+
+        // Wallpaper/Monet color changes are events, not periodic weather updates.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
+            WallpaperManager.getInstance(this).addOnColorsChangedListener(
+                { _, which ->
+                    if (which and WallpaperManager.FLAG_SYSTEM != 0) {
+                        refreshWidgetAppearance()
+                    }
+                },
+                Handler(Looper.getMainLooper())
+            )
+        }
 
         if (getProcessName().equals(packageName)) {
             // Sets and persists the night mode setting for this app. This allows the system to know
@@ -95,6 +128,31 @@ class BreezyWeather : Application(), Configuration.Provider {
          * scheduled workers after the app has been killed/shutdown on some devices
          */
         this.workManager.getWorkInfosLiveData(WorkQuery.fromStates(WorkInfo.State.ENQUEUED))
+    }
+
+    override fun onConfigurationChanged(newConfig: AndroidConfiguration) {
+        super.onConfigurationChanged(newConfig)
+        val nightMode = newConfig.uiMode and AndroidConfiguration.UI_MODE_NIGHT_MASK
+        if (nightMode != previousNightMode) {
+            previousNightMode = nightMode
+            refreshWidgetAppearance()
+        }
+    }
+
+    private fun refreshWidgetAppearance() {
+        appearanceRefreshJob?.cancel()
+        appearanceRefreshJob = appearanceScope.launch {
+            // Coalesce configuration and wallpaper broadcasts from the same theme change.
+            delay(200)
+            try {
+                // Only read cached weather: changing theme must never start a network refresh.
+                refreshHelper.updateWidgetIfNecessary(this@BreezyWeather)
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                LogHelper.log(msg = "Unable to refresh widgets after appearance change: ${e.message}")
+            }
+        }
     }
 
     fun addActivity(a: BreezyActivity) {
