@@ -19,17 +19,18 @@ package org.breezyweather
 import android.app.Application
 import android.app.UiModeManager
 import android.app.WallpaperManager
+import android.content.pm.ApplicationInfo
 import android.content.res.Configuration as AndroidConfiguration
+import android.os.Build
 import android.os.Handler
 import android.os.Looper
-import android.content.pm.ApplicationInfo
-import android.os.Build
 import android.os.Process
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
 import androidx.work.WorkInfo
 import androidx.work.WorkQuery
+import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -37,7 +38,6 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import dagger.hilt.android.HiltAndroidApp
 import org.breezyweather.common.activities.BreezyActivity
 import org.breezyweather.common.extensions.uiModeManager
 import org.breezyweather.common.extensions.workManager

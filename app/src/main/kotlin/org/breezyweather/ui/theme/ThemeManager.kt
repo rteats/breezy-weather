@@ -81,7 +81,7 @@ class ThemeManager private constructor(
         }
 
         private fun isSystemInDarkMode(context: Context): Boolean =
-            context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK ==
+            (context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
                 Configuration.UI_MODE_NIGHT_YES
     }
 }

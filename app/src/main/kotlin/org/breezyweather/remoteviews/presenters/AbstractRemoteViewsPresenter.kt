@@ -22,13 +22,13 @@ import android.app.PendingIntent
 import android.app.WallpaperManager
 import android.content.ContentUris
 import android.content.Context
-import android.content.res.Configuration
-import android.os.Build
-import android.widget.RemoteViews
 import android.content.Intent
+import android.content.res.Configuration
 import android.graphics.drawable.BitmapDrawable
+import android.os.Build
 import android.provider.AlarmClock
 import android.provider.CalendarContract
+import android.widget.RemoteViews
 import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
@@ -92,17 +92,16 @@ abstract class AbstractRemoteViewsPresenter {
         init {
             backgroundType = WidgetBackgroundType.find(cardStyle)
             showCard = backgroundType != WidgetBackgroundType.NONE
-            useMonetText = backgroundType == WidgetBackgroundType.MONET ||
-                (backgroundType == WidgetBackgroundType.NONE && textColor == "monet")
+            useMonetText = backgroundType == WidgetBackgroundType.MONET || textColor == "monet"
             isLightThemed = when (backgroundType) {
                 WidgetBackgroundType.LIGHT -> true
                 WidgetBackgroundType.DARK -> false
                 WidgetBackgroundType.AUTO -> ThemeManager.isLightTheme(context, dayTime)
-                WidgetBackgroundType.MONET -> context.resources.configuration.uiMode and
-                    Configuration.UI_MODE_NIGHT_MASK != Configuration.UI_MODE_NIGHT_YES
+                WidgetBackgroundType.MONET -> (context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) !=
+                    Configuration.UI_MODE_NIGHT_YES
                 WidgetBackgroundType.NONE -> if (useMonetText) {
-                    context.resources.configuration.uiMode and
-                        Configuration.UI_MODE_NIGHT_MASK != Configuration.UI_MODE_NIGHT_YES
+                    (context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) !=
+                        Configuration.UI_MODE_NIGHT_YES
                 } else {
                     isLightWallpaper(context)
                 }
